@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>High School Result Portal</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  h1, h2 {
+    text-align: center;
+    color: #333;
+  }
+  form {
+    text-align: center;
+  }
+  input[type="text"], select {
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+  }
+  input[type="submit"] {
+    padding: 8px 16px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+  }
+  input[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+  .result {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>High School Result Portal</h1>
+  <form id="resultForm">
+    <input type="text" id="rollNumber" placeholder="Enter Roll Number">
+    <select id="grade">
+      <option value="">Select Grade</option>
+      <option value="9">Grade 9</option>
+      <option value="10">Grade 10</option>
+      <option value="11">Grade 11</option>
+      <option value="12">Grade 12</option>
+    </select>
+    <div id="subjects">
+      <!-- Input fields for subjects and marks will be added dynamically -->
+    </div>
+    <input type="submit" value="Show Result">
+  </form>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+document.getElementById('resultForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const rollNumber = document.getElementById('rollNumber').value.trim();
+  const grade = document.getElementById('grade').value;
+  if (rollNumber === '' || grade === '') {
+    alert('Please enter roll number and select grade');
+    return;
+  }
+
+  // Get subject names and marks
+  const subjects = [];
+  document.querySelectorAll('[data-subject]').forEach(input => {
+    const subject = input.dataset.subject;
+    const mark = parseFloat(input.value.trim());
+    if (!isNaN(mark)) {
+      subjects.push({ subject, mark });
+    }
+  });
+
+  // Simulate fetching result from a backend database
+  setTimeout(function() {
+    const resultDiv = document.getElementById('result');
+    let resultMessage = `Result for Roll Number ${rollNumber}, Grade ${grade}:<br>`;
+    subjects.forEach(({ subject, mark }) => {
+      resultMessage += `${subject}: ${mark}<br>`;
+    });
+    resultDiv.innerHTML = resultMessage;
+  }, 1000);
+});
+
+// Dynamically add input fields for subjects and marks based on grade selection
+document.getElementById('grade').addEventListener('change', function() {
+  const grade = this.value;
+  const subjectsDiv = document.getElementById('subjects');
+  subjectsDiv.innerHTML = '';
+
+  if (grade !== '') {
+    const subjects = ['Math', 'Science', 'English', 'History']; // Add more subjects as needed
+    subjects.forEach(subject => {
+      const label = document.createElement('label');
+      label.textContent = `${subject}: `;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.setAttribute('data-subject', subject.toLowerCase());
+      subjectsDiv.appendChild(label);
+      subjectsDiv.appendChild(input);
+      subjectsDiv.appendChild(document.createElement('br'));
+    });
+  }
+});
+</script>
+</body>
+</html>
